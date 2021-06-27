@@ -12,7 +12,7 @@ var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper, append an SVG group that will hold our chart, and shift the latter by left and top margins.
-var svg = d3.select(".chart")
+var svg = d3.select("body")
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
@@ -25,7 +25,7 @@ d3.csv("Data.csv").then(function(Data) {
 
     // Step 1: Parse Data/Cast as numbers
     // ==============================
-    data.forEach(function(data) {
+    chartData.forEach(function(data) {
       data.poverty = +data.poverty;
       data.healthcare = +data.healthcare;
     });
@@ -57,7 +57,7 @@ d3.csv("Data.csv").then(function(Data) {
     // Step 5: Create Circles
     // ==============================
     var circlesGroup = chartGroup.selectAll("circle")
-    .data(Data)
+    .data(chartData)
     .enter()
     .append("circle")
     .attr("cx", d => xLinearScale(d.poverty))
@@ -81,12 +81,12 @@ d3.csv("Data.csv").then(function(Data) {
 
     // Step 8: Create event listeners to display and hide the tooltip
     // ==============================
-    circlesGroup.on("click", function(data) {
-      toolTip.show(data, this);
+    circlesGroup.on("click", function(chartData) {
+      toolTip.show(chartData, this);
     })
       // onmouseout event
-      .on("mouseout", function(data, index) {
-        toolTip.hide(data);
+      .on("mouseout", function(chartData, index) {
+        toolTip.hide(chartData);
       });
 
     // Create axes labels
