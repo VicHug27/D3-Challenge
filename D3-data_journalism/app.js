@@ -12,7 +12,7 @@ var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper, append an SVG group that will hold our chart, and shift the latter by left and top margins.
-var svg = d3.select("body")
+var svg = d3.select("#scatter")
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
@@ -33,11 +33,11 @@ d3.csv("Data.csv").then(function(fileData) {
     // Step 2: Create scale functions
     // ==============================
     var xLinearScale = d3.scaleLinear()
-      .domain([20, d3.max(fileData, d => d.poverty)])
+      .domain([0, d3.max(fileData, d => d.healthcare)])
       .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-      .domain([0, d3.max(fileData, d => d.healthcare)])
+      .domain([0, d3.max(fileData, d => d.poverty) *1.2])
       .range([height, 0]);
 
     // Step 3: Create axis functions
@@ -60,11 +60,28 @@ d3.csv("Data.csv").then(function(fileData) {
     .data(fileData)
     .enter()
     .append("circle")
-    .attr("cx", d => xLinearScale(d.healthcare))
-    .attr("cy", d => yLinearScale(d.poverty))
-    .attr("r", "15")
-    .attr("fill", "pink")
+    .attr("cx", d => xLinearScale(d.poverty))
+    .attr("cy", d => yLinearScale(d.healthcare))
+    .attr("r", "10")
+    .attr("fill", "blue")
     .attr("opacity", ".5");
+
+    chartGroup.append("text")
+    .style("font-size", "10px")
+    //.style("font-color", "white")
+    .selectAll("tspan")
+    .data(fileData)
+    .enter()
+    .append("tspan")
+        .attr("x", function(data) {
+            return xLinearScale(data.poverty -.2);
+        })
+        .attr("y", function(data) {
+            return yLinearScale(data.healthcare -.2);
+        })
+        .text(function(data) {
+            return data.abbr
+        });
 
     // Step 6: Initialize tool tip
     // ==============================
@@ -72,7 +89,7 @@ d3.csv("Data.csv").then(function(fileData) {
       .attr("class", "tooltip")
       .offset([80, -60])
       .html(function(d) {
-        return (`${d.abbr}<br>Poverty: ${d.poverty}<br>Hits: ${d.healthcare}`);
+        return (`${d.abbr}<br>Poverty: ${d.poverty}<br>Healthcare: ${d.healthcare}`);
       });
 
     // Step 7: Create tooltip in the chart
