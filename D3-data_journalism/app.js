@@ -21,7 +21,7 @@ var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Import Data
-d3.csv("Data.csv").then(function(fileData) {
+d3.csv("data.csv").then(function(fileData) {
 
     // Step 1: Parse Data/Cast as numbers
     // ==============================
@@ -68,7 +68,6 @@ d3.csv("Data.csv").then(function(fileData) {
 
     chartGroup.append("text")
     .style("font-size", "10px")
-    //.style("font-color", "white")
     .selectAll("tspan")
     .data(fileData)
     .enter()
@@ -87,7 +86,7 @@ d3.csv("Data.csv").then(function(fileData) {
     // ==============================
     var toolTip = d3.tip()
       .attr("class", "tooltip")
-      .offset([80, -60])
+      .offset([80, -50])
       .html(function(d) {
         return (`${d.abbr}<br>Poverty: ${d.poverty}<br>Healthcare: ${d.healthcare}`);
       });
